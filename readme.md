@@ -27,7 +27,7 @@ Clarification: NMake* properties vs GNU Make
 - The actual compilation/link step is performed by GNU Make via the Makefile in the project directory. The NMake*CommandLine properties simply invoke make (e.g., make -f Makefile all). We are not using MSVC NMake here; the provided Makefile uses GNU Make–specific syntax and should be executed by GNU make.
 - In short: NMake* is the MSBuild/Rider integration surface; GNU Make is the tool that builds the executable.
 
-Opportunities / Potential future work
+Opportunities / Potential future
 - Cross-toolchain discovery
   - Extend include/library path discovery to MSVC and GCC on all platforms.
   - Validate toolchain availability before the evaluation time.
