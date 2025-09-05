@@ -60,7 +60,7 @@ static std::pair<double, std::optional<double>> sum_and_median(std::vector<int> 
 }
 
 int main(int argc, char** argv) {
-    std::cout << "Hello from HelloNMake sample!\n";
+    std::cout << "Hello from HelloGnuMake sample!\n";
 
     // 1) Use std to analyze text
     const std::string text = "C++ makes it easy to shoot yourself in the foot; std makes it harder, but when you do, it blows your whole leg off.";

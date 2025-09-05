@@ -1,7 +1,7 @@
 CXX ?= clang++
 CXXFLAGS ?= -std=c++17 -O0 -g
 OUT_DIR := out
-BIN := $(OUT_DIR)/hellonmake
+BIN := $(OUT_DIR)/hellognumake
 
 all: $(BIN)
 
