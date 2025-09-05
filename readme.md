@@ -1,4 +1,4 @@
-RiderMSBuildCPP is a cross-platform MSBuild-style framework for C++ projects in JetBrains Rider. It enables using .sln, .vcxproj, .targets, and .props on macOS, Linux, and Windows.
+Cross-plafrom JetBrains Rider, C++, and MSBuild integration.
 
 Overview
 - Goal: Provide a minimal, cross-platform MSBuild layer for C++ in Rider that keeps existing MSBuild project files usable across OSes.
