@@ -3,10 +3,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{5F5A9F6E-3C53-4B2F-AF3E-2A1FC1B5C6D7}</ProjectGuid>
   </PropertyGroup>
-
-  <!-- Import minimal NMake substitution props from this repo -->
-  <Import Project="../../targets/nmake.substitution.props" />
-
+  
   <PropertyGroup Label="Configuration">
     <ConfigurationType>Makefile</ConfigurationType>
     <NMakeOutput Condition="'$(NMakeOutput)' == ''">out/hellonmake</NMakeOutput>
@@ -16,19 +13,26 @@
     <NMakeBuildCommandLine>make -f Makefile all</NMakeBuildCommandLine>
     <NMakeReBuildCommandLine>make -f Makefile clean all</NMakeReBuildCommandLine>
     <NMakeCleanCommandLine>make -f Makefile clean</NMakeCleanCommandLine>
+    
+    <!-- Set C++ language standard for IDE/tooling -->
+    <LanguageStandard>stdcpp17</LanguageStandard>
   </PropertyGroup>
 
   <!-- Map platform to architecture expected by our props and define NMake commands -->
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+  <PropertyGroup Condition="'$(Platform)'=='arm64'">
+    <Arch>arm64</Arch>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+  <PropertyGroup Condition="'$(Platform)'=='x64'">
+    <Arch>x86_64</Arch>
   </PropertyGroup>
-
+  
   <ItemGroup>
     <None Include="main.cpp" />
     <None Include="Makefile" />
   </ItemGroup>
-
+  
+  <!-- Import minimal NMake substitution props -->
+  <Import Project="../../targets/nmake.substitution.props" />
   <!-- Import Rider design-time target for Clang system includes discovery -->
   <Import Project="../../targets/JetBrains.Rider.Cpp.targets" />
 </Project>
