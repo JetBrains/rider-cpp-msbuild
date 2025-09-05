@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{5F5A9F6E-3C53-4B2F-AF3E-2A1FC1B5C6D7}</ProjectGuid>
+  </PropertyGroup>
+
+  <!-- Import minimal NMake substitution props from this repo -->
+  <Import Project="../../targets/nmake.substitution.props" />
+
+  <PropertyGroup Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <NMakeOutput Condition="'$(NMakeOutput)' == ''">out/hellonmake</NMakeOutput>
+    <LocalDebuggerCommand>$(NMakeOutput)</LocalDebuggerCommand>
+    <NMakeWorkingDirectory>$(MSBuildThisFileDirectory)</NMakeWorkingDirectory>
+    
+    <NMakeBuildCommandLine>make -f Makefile all</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>make -f Makefile clean all</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>make -f Makefile clean</NMakeCleanCommandLine>
+  </PropertyGroup>
+
+  <!-- Map platform to architecture expected by our props and define NMake commands -->
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="main.cpp" />
+    <None Include="Makefile" />
+  </ItemGroup>
+
+  <!-- Import Rider design-time target for Clang system includes discovery -->
+  <Import Project="../../targets/JetBrains.Rider.Cpp.targets" />
+</Project>
