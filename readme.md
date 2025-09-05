@@ -17,7 +17,7 @@ What works today (implemented)
 Notes
 - The Clang include discovery currently relies on clang++ being available on PATH and uses standard POSIX tools (sed/grep/tail), so it is primarily applicable on macOS/Linux.
 
-Oppotunities / Future work
+Opportunities / Future work
 - Cross-toolchain discovery
   - Extend include/library path discovery to MSVC and GCC on all platforms.
   - Validate toolchain availability and surface actionable messages during design-time.
