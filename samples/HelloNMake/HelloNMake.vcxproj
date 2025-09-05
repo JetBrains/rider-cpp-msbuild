@@ -13,9 +13,8 @@
     <NMakeBuildCommandLine>make -f Makefile all</NMakeBuildCommandLine>
     <NMakeReBuildCommandLine>make -f Makefile clean all</NMakeReBuildCommandLine>
     <NMakeCleanCommandLine>make -f Makefile clean</NMakeCleanCommandLine>
-    
-    <!-- Set C++ language standard for IDE/tooling -->
-    <LanguageStandard>stdcpp17</LanguageStandard>
+
+    <PlatformToolset>Clang_Mac</PlatformToolset>
   </PropertyGroup>
 
   <!-- Map platform to architecture expected by our props and define NMake commands -->

@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <!-- Unknown matches to a set of conservative rules for the code analysis-->
-    <PlatformToolset>Unknown</PlatformToolset>
+    <!-- Only set a conservative default when project doesn't specify PlatformToolset -->
+    <PlatformToolset Condition="'$(PlatformToolset)' == ''">Unknown</PlatformToolset>
+    <!-- Possible values: V143, Clang_Mac, Clang_Linux, llvm, Clang, ClangCL, MSFS, Unknown-->
+    <!-- this affects which C++ dialect is expected -->
   </PropertyGroup>
+
   <!-- Build/Rebuild/Clean targets for NMake are defined in MSVC, so we need to provide them, when using MSBuild without MSVC targets -->
   <Target Name="Build">
     <Exec Command="$(NMakeBuildCommandLine)"
@@ -17,6 +20,7 @@
     <Exec Command="$(NMakeCleanCommandLine)"
           WorkingDirectory="$(NMakeWorkingDirectory)"/>
   </Target>
+
   <ItemDefinitionGroup>
     <!-- Reflects what Platform.Common.props does. -->
     <Link Condition="'$(Arch)' == 'arm64'">
