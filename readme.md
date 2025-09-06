@@ -28,10 +28,13 @@ Clarification: NMake* properties vs GNU Make
 - In short: NMake* is the MSBuild/Rider integration surface; GNU Make is the tool that builds the executable.
 
 Opportunities / Potential future
+- github CI, 
+  - check compilation targeting different platforms Mac, Linux, Windows, iOS, Android, Web, etc
+  - inspectcode validate Rider code analysis results are similar as compilation
 - Cross-toolchain discovery
   - Extend include/library path discovery to MSVC and GCC on all platforms.
   - Validate toolchain availability before the evaluation time.
 - Broader cross-platform support
   - Provide Windows-friendly discovery that does not depend on POSIX utilities.
 - Smart PlatformToolset detection
-  - In the example project PlatformToolset is hard-coded to Clang_Mac.
+  - Currently PlatformToolset is hard-coded to Clang_Mac.

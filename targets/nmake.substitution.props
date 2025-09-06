@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
   <PropertyGroup>
-    <!-- Only set a conservative default when project doesn't specify PlatformToolset -->
-    <PlatformToolset Condition="'$(PlatformToolset)' == ''">Unknown</PlatformToolset>
+    <IsWindows>$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))</IsWindows>
+    <IsMac>$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))</IsMac>
+    <IsLinux>$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))</IsLinux>
+  </PropertyGroup>
+  
+  <PropertyGroup>
     <!-- Possible values: V143, Clang_Mac, Clang_Linux, llvm, Clang, ClangCL, MSFS, Unknown-->
-    <!-- this affects which C++ dialect is expected -->
+    <!-- Select toolset based on target GodotPlatform. Switches Cpp dialect a bit -->
+    <PlatformToolset>Clang_Mac</PlatformToolset>
   </PropertyGroup>
 
   <!-- Build/Rebuild/Clean targets for NMake are defined in MSVC, so we need to provide them, when using MSBuild without MSVC targets -->

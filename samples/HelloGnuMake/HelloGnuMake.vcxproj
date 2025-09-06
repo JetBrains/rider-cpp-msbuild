@@ -13,8 +13,8 @@
     <NMakeBuildCommandLine>make -f Makefile all</NMakeBuildCommandLine>
     <NMakeReBuildCommandLine>make -f Makefile clean all</NMakeReBuildCommandLine>
     <NMakeCleanCommandLine>make -f Makefile clean</NMakeCleanCommandLine>
-
-    <PlatformToolset>Clang_Mac</PlatformToolset>
+<!-- consider un-commenting this, when MSVC is supported, otherwise VS overwrites it -->
+<!--    <PlatformToolset>v143</PlatformToolset>-->
   </PropertyGroup>
 
   <!-- Map platform to architecture expected by our props and define NMake commands -->
