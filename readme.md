@@ -38,3 +38,4 @@ Opportunities / Potential future
   - Provide Windows-friendly discovery that does not depend on POSIX utilities.
 - Smart PlatformToolset detection
   - Currently PlatformToolset is hard-coded to Clang_Mac.
+- Distribute with Nuget?
