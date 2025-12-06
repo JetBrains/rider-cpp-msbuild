@@ -10,7 +10,9 @@
   <PropertyGroup>
     <!-- Possible values: V143, Clang_Mac, Clang_Linux, llvm, Clang, ClangCL, MSFS, Unknown-->
     <!-- Select toolset based on target GodotPlatform. Switches Cpp dialect a bit -->
-    <PlatformToolset>Clang_Mac</PlatformToolset>
+    <PlatformToolset Condition="$(IsWindows)">V143</PlatformToolset>
+    <PlatformToolset Condition="$(IsMac)">Clang_Mac</PlatformToolset>
+    <PlatformToolset Condition="$(IsLinux)">Clang_Linux</PlatformToolset>
   </PropertyGroup>
 
   <!-- Build/Rebuild/Clean targets for NMake are defined in MSVC, so we need to provide them, when using MSBuild without MSVC targets -->
