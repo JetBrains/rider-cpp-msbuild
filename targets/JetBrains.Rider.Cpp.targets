@@ -1,4 +1,48 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <!-- MSBuild Inline Task: parse g++ -dM output in a portable way (no awk/sed) -->
+    <UsingTask TaskName="ParseGccDefines"
+               TaskFactory="CodeTaskFactory"
+               AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+        <ParameterGroup>
+            <InputLines ParameterType="Microsoft.Build.Framework.ITaskItem[]" Required="true" />
+            <DefinesOut ParameterType="System.String" Output="true" />
+        </ParameterGroup>
+        <Task>
+            <Reference Include="System" />
+            <Using Namespace="System" />
+            <Using Namespace="System.Text" />
+            <Code Type="Fragment" Language="cs">
+                <![CDATA[
+                  var sb = new StringBuilder();
+                  foreach (var item in InputLines)
+                  {
+                    var line = item.ItemSpec?.Trim();
+                    if (string.IsNullOrEmpty(line)) continue;
+                    if (!line.StartsWith("#define ")) continue;
+                    var rest = line.Substring(8).Trim();
+                    int space = rest.IndexOf(' ');
+                    string name, value;
+                    if (space < 0)
+                    {
+                      name = rest; value = "1";
+                    }
+                    else
+                    {
+                      name = rest.Substring(0, space);
+                      value = rest.Substring(space + 1).Trim();
+                      if (value.Length == 0) value = "1";
+                    }
+                    // Skip function-like macros: NAME(
+                    if (name.IndexOf('(') >= 0) continue;
+                    // Normalize whitespace in value
+                    value = System.Text.RegularExpressions.Regex.Replace(value, "\\s+", " ");
+                    sb.Append(name).Append('=').Append(value).Append(';');
+                  }
+                  DefinesOut = sb.ToString();
+                ]]>
+            </Code>
+        </Task>
+    </UsingTask>
     
     <!-- can be used in the future to check that `clang++` exists -->
     <!-- <Target Name="GetSuggestedWorkloads" Condition="'$(DesignTimeBuild)' == 'true'"></Target>-->
@@ -7,8 +51,16 @@
     <Target Name="ResolveFrameworkReferences" Condition="'$(DesignTimeBuild)' == 'true'">
         <Message Text="Resolving toolchain..." Importance="High"/>
 
-        <!-- Query clang include paths -->
-        <Exec Command="clang++ -v -E -x c++ /dev/null 2&gt;&amp;1 | sed -n '/#include &lt;...&gt; search starts here:/,/End of search list/p' | tail -n +2 | grep -v 'End of search list' | xargs -I{} echo -n '{};'" ConsoleToMsBuild="true">
+        <!-- Query compiler include paths -->
+        <!-- On Linux prefer GCC (g++) to match default SCons toolchain; -->
+        <Exec Condition="$(IsLinux)"
+              Command="g++ -v -E -x c++ /dev/null 2&gt;&amp;1 | sed -n '/#include &lt;...&gt; search starts here:/,/End of search list/p' | tail -n +2 | grep -v 'End of search list' | xargs -I{} echo -n '{};'"
+              ConsoleToMsBuild="true">
+            <Output TaskParameter="ConsoleOutput" PropertyName="ClangIncludeDirs"/>
+        </Exec>
+        <Exec Condition="$(IsMac)"
+              Command="clang++ -v -E -x c++ /dev/null 2&gt;&amp;1 | sed -n '/#include &lt;...&gt; search starts here:/,/End of search list/p' | tail -n +2 | grep -v 'End of search list' | xargs -I{} echo -n '{};'"
+              ConsoleToMsBuild="true">
             <Output TaskParameter="ConsoleOutput" PropertyName="ClangIncludeDirs"/>
         </Exec>
 
@@ -19,4 +71,26 @@
         <Message Text="NMakeIncludeSearchPath: $(NMakeIncludeSearchPath)"/>
     </Target>
 
+    <!-- Likely not implemented for Linux https://youtrack.jetbrains.com/issue/RSCPP-37132/Predefine-macro-on-Linux -->
+    <Target Name="FetchGccDefines" BeforeTargets="ResolveFrameworkReferences" Condition="'$(IsLinux)' == 'true' And '$(DesignTimeBuild)' == 'true'">
+        <Message Text="Resolving GccDefines (MSBuild Inline Task)..." Importance="High"/>
+
+        <!-- Run g++ and capture output lines -->
+        <Exec Command="g++ -dM -E - &lt; /dev/null"
+              ConsoleToMsBuild="true"
+              EchoOff="true">
+            <Output TaskParameter="ConsoleOutput" ItemName="__GccDefineLines" />
+        </Exec>
+
+        <!-- Parse to a single ; separated KEY=VAL string -->
+        <ParseGccDefines InputLines="@(__GccDefineLines)">
+            <Output TaskParameter="DefinesOut" PropertyName="GccDefines" />
+        </ParseGccDefines>
+
+        <PropertyGroup>
+            <NMakePreprocessorDefinitions>$(GccDefines);$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+        </PropertyGroup>
+
+        <Message Text="NMakePreprocessorDefinitions: $(NMakePreprocessorDefinitions)" Importance="Low"/>
+    </Target>
 </Project>
