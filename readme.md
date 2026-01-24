@@ -6,7 +6,9 @@ Overview
 
 What works today (implemented)
 - Design-time include discovery for C++ STD headers (targets/JetBrains.Rider.Cpp.targets)
-  - During evaluation time, the ResolveFrameworkReferences target probes clang++ for its system include directories and prepends them to NMakeIncludeSearchPath.
+  - During evaluation time the ResolveFrameworkReferences target does the following:
+    - probes clang/gcc for its system include directories and prepends them to NMakeIncludeSearchPath
+    - probes gcc for pre-processor defines and prepends them to NMakePreprocessorDefinitions
 - NMake substitution for basic build lifecycle (targets/nmake.substitution.props)
   - Defines Build, Rebuild, and Clean targets that call NMake*CommandLine properties (NMakeBuildCommandLine, NMakeReBuildCommandLine, NMakeCleanCommandLine) in the specified NMakeWorkingDirectory. This allows invoking typical actions via MSBuild, when MSVC targets are not present.
 
