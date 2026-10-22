@@ -8,8 +8,8 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
 		Release|x64 = Release|x64
-		Debug|arm64 = Debug|macos
-		Release|arm64 = Release|macos
+		Debug|arm64 = Debug|arm64
+		Release|arm64 = Release|arm64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{5F5A9F6E-3C53-4B2F-AF3E-2A1FC1B5C6D7}.Debug|x64.ActiveCfg = Debug|x64
