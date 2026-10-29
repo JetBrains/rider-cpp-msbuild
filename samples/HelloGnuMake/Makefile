@@ -9,7 +9,7 @@ $(OUT_DIR):
 	mkdir -p $(OUT_DIR)
 
 $(BIN): main.cpp | $(OUT_DIR)
-	$(CXX) $(CXXFLAGS) -o $@ main.cpp
+	$(CXX) $(CXXFLAGS) -o $@ $(CURDIR)/main.cpp
 
 clean:
 	rm -rf $(OUT_DIR)
