@@ -38,6 +38,11 @@ How this differs from similar projects
   - Makes dotnet build compile regular .vcxproj files with GCC/Clang/Emscripten, keeping them usable in Visual Studio.
   - Distributed as the GCCBuildTargets NuGet package (PackageReference) plus a dotnet new template.
   - Visual Studio is the only IDE it targets; it disables itself during design-time builds (DesignTimeBuild == true), so the IDE sees the normal MSVC setup.
+- godotengine/godot (https://github.com/godotengine/godot)
+  - Its SCons build has a built-in generator (scons vsproj=yes) that writes godot.sln/godot.vcxproj plus per-configuration *.generated.props; the project works in Rider on all OSes and in Visual Studio.
+  - Values are probed at generation time: the build's real CPPDEFINES/CPPPATH/CXXFLAGS plus the compiler's system include dirs (parsed from $CXX -v) are baked into NMakePreprocessorDefinitions/NMakeIncludeSearchPath; they go stale until the next scons run.
+  - MSVC props/targets are imported only if they exist; otherwise its own misc/msvs/nmake.substitution.props (the origin of the one here) provides Build/Rebuild/Clean calling scons.
+  - Nothing to distribute: the glue lives in Godot's own tree; does not use the ResolveFrameworkReferences design-time hook.
 - This repository
   - Focuses on the Rider IDE experience on macOS/Linux: during design-time it queries the real compiler (clang++/g++) for system include directories and predefined macros and feeds them into NMakeIncludeSearchPath/NMakePreprocessorDefinitions.
   - Does not replace VCTargets or compile via MSBuild: the build is delegated to your own build system through NMake*CommandLine properties; only minimal Build/Rebuild/Clean targets are provided.
