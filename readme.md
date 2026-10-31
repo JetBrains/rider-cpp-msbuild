@@ -29,6 +29,20 @@ Clarification: NMake* properties vs GNU Make
 - The actual compilation/link step is performed by GNU Make via the Makefile in the project directory. The NMake*CommandLine properties simply invoke make (e.g., make -f Makefile all). We are not using MSVC NMake here; the provided Makefile uses GNU Make–specific syntax and should be executed by GNU make.
 - In short: NMake* is the MSBuild/Rider integration surface; GNU Make is the tool that builds the executable.
 
+How this differs from similar projects
+- Chuyu-Team/MSBuildCppCrossToolset (https://github.com/Chuyu-Team/MSBuildCppCrossToolset)
+  - A modified copy of Microsoft's whole VCTargets tree with GCC/Clang toolsets; MSBuild itself compiles and links (ClCompile/Link mapped to gcc/clang flags).
+  - Distributed as a release zip; activated by setting the VCTargetsPath environment variable, then building with dotnet msbuild.
+  - Targets command-line builds; does not mention any IDE and does not provide design-time include/define discovery.
+- roozbehid/dotnet-vcxproj (https://github.com/roozbehid/dotnet-vcxproj)
+  - Makes dotnet build compile regular .vcxproj files with GCC/Clang/Emscripten, keeping them usable in Visual Studio.
+  - Distributed as the GCCBuildTargets NuGet package (PackageReference) plus a dotnet new template.
+  - Visual Studio is the only IDE it targets; it disables itself during design-time builds (DesignTimeBuild == true), so the IDE sees the normal MSVC setup.
+- This repository
+  - Focuses on the Rider IDE experience on macOS/Linux: during design-time it queries the real compiler (clang++/g++) for system include directories and predefined macros and feeds them into NMakeIncludeSearchPath/NMakePreprocessorDefinitions.
+  - Does not replace VCTargets or compile via MSBuild: the build is delegated to your own build system through NMake*CommandLine properties; only minimal Build/Rebuild/Clean targets are provided.
+  - Tiny and plain-XML, so it can be combined with the projects above if you need MSBuild-driven compilation.
+
 Opportunities / Potential future
 - github CI, 
   - check compilation targeting different platforms Mac, Linux, Windows, iOS, Android, Web, etc
@@ -38,6 +52,7 @@ Opportunities / Potential future
   - Validate toolchain availability before the evaluation time.
 - Broader cross-platform support
   - Provide Windows-friendly discovery that does not depend on POSIX utilities.
-- Smart PlatformToolset detection
-  - Currently PlatformToolset is hard-coded to Clang_Mac.
-- Distribute with Nuget?
+
+Distribution (not solved yet)
+- There is no official distribution channel yet.
+- The MIT license (see LICENSE) allows you to copy the files from `targets/` into your own repository and import them.
